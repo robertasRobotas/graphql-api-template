@@ -2,8 +2,11 @@ const express = require('express');
 const {buildSchema} = require('graphql');
 const graphqlHttp = require('express-graphql');
 const bodyParser = require('body-parser');
+const initializeEnvVariables = require('./env');
 
 const app = express();
+initializeEnvVariables();
+console.log(process.env.VARIABLE);
 
 app.use(bodyParser.json());
 
@@ -36,4 +39,4 @@ app.use('/graphql', graphqlHttp({
 	}
   ));
 
-app.listen(3000,()=>{console.log('Started')});
+app.listen(process.env.PORT,()=>{console.log(`Started on ${process.env.PORT}`)});
