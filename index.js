@@ -2,6 +2,7 @@ const express = require('express');
 const {buildSchema} = require('graphql');
 const graphqlHttp = require('express-graphql');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const initializeEnvVariables = require('./env');
 
 const app = express();
@@ -65,7 +66,11 @@ app.use('/graphql', graphqlHttp({
 	}
   ));
 
-app.listen(process.env.PORT,()=>{console.log(`Started on ${process.env.PORT}`)});
+  mongoose.connect( process.env.MONGO_LINK).then(()=>{
+	app.listen(process.env.PORT,()=>{console.log(`---STARTED ON ${process.env.PORT}---`)})
+  });
+
+
 
 
 
