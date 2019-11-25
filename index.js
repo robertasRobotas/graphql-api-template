@@ -10,14 +10,32 @@ console.log(process.env.VARIABLE);
 
 app.use(bodyParser.json());
 
+const events = [];
+
 app.use('/graphql', graphqlHttp({
 	schema : buildSchema(`
+
+		type Event {
+			_id:ID!
+			title:String!
+			description:String!
+			price:Float!
+			date: String
+		}
+
+		input EventInput {
+			title:String!
+			description:String!
+			price:Float!
+			date: String
+		}
+
 		type RootQuery {
-			events: [String]!
+			events: [Event]!
 		}
 
 		type RootMutation {
-			createEvent(name: String): String
+			createEvent(eventInput: EventInput): Event
 		}
 
 		schema {
@@ -28,11 +46,19 @@ app.use('/graphql', graphqlHttp({
 	`),
 		rootValue :{
 			events : ()=>{
-				return ['asasas','sdsdsd','dfdfdf'];
+				return events;
 			},
 			createEvent : (args)=>{
-				const eventName = args.name;
-				return  eventName ;
+				const event = {
+					_id: Math.random().toString(),
+					title: args.eventInput.title,
+					name: args.eventInput.name,
+					price: args.eventInput.price,
+					date: new Date().toISOString()
+				}
+				console.log(args)
+				events.push(event);
+				return  event ;
 			}
 		},
 		graphiql : true
@@ -40,3 +66,14 @@ app.use('/graphql', graphqlHttp({
   ));
 
 app.listen(process.env.PORT,()=>{console.log(`Started on ${process.env.PORT}`)});
+
+
+
+
+
+// mutation{
+// 	createEvent(eventInput:{title: "Sky Park PArty", description: "Cool pae\rtyyy", price: 12.32}) {
+// 	  date
+// 	  title
+// 	}
+//   }
