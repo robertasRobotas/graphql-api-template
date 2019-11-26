@@ -4,10 +4,10 @@ const graphqlHttp = require('express-graphql');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const initializeEnvVariables = require('./env');
+const Event = require('./models/event');
 
 const app = express();
 initializeEnvVariables();
-console.log(process.env.VARIABLE);
 
 app.use(bodyParser.json());
 
@@ -47,19 +47,20 @@ app.use('/graphql', graphqlHttp({
 	`),
 		rootValue :{
 			events : ()=>{
-				return events;
+				return Event.find();
 			},
 			createEvent : (args)=>{
-				const event = {
-					_id: Math.random().toString(),
+				const event = new Event({
 					title: args.eventInput.title,
-					name: args.eventInput.name,
+					description: args.eventInput.description,
 					price: args.eventInput.price,
 					date: new Date().toISOString()
-				}
-				console.log(args)
-				events.push(event);
-				return  event ;
+				});
+				return event.save().then(result =>{
+					return result
+				}).catch(err=>{
+					console.log(err);
+				});
 			}
 		},
 		graphiql : true
