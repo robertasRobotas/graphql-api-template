@@ -40,3 +40,19 @@ app.use('/graphql', graphqlHttp({
 // 	  email
 // 	}
 //   }
+
+
+
+
+// mutation{
+//     bookEvent(eventId: "5de050cfca434d0d9809e312"){
+//       createdAt
+//     	updatedAt
+//       user{
+//         name
+//       }
+//     	event{
+//         title
+//       }
+//     }
+//   }
